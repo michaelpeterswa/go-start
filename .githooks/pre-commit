@@ -3,6 +3,9 @@
 echo "running yamllint against repository"
 yamllint .
 
+echo "running golangci-lint against repository"
+golangci-lint run
+
 echo "running hadolint against Dockerfile"
 hadolint Dockerfile
 

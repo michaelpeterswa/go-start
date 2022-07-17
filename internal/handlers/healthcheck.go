@@ -11,5 +11,8 @@ type Health struct {
 
 func HealthcheckHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(Health{Healthy: true})
+	err := json.NewEncoder(w).Encode(Health{Healthy: true})
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
