@@ -2,9 +2,9 @@
 name: Upload Image
 
 on:  # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - main
+  release:
+    types:
+      - created
 
 env:
   REGISTRY: ghcr.io
