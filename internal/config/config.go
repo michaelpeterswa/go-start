@@ -2,39 +2,29 @@ package config
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/knadh/koanf/providers/env"
-	"github.com/knadh/koanf/v2"
+	"github.com/caarlos0/env/v11"
 )
 
-const (
-	LogLevel = "log.level"
+type Config struct {
+	LogLevel string `env:"LOG_LEVEL" envDefault:"error"`
 
-	MetricsEnabled = "metrics.enabled"
-	MetricsPort    = "metrics.port"
+	MetricsEnabled bool `env:"METRICS_ENABLED" envDefault:"true"`
+	MetricsPort    int  `env:"METRICS_PORT" envDefault:"8081"`
 
-	TracingEnabled    = "tracing.enabled"
-	TracingSampleRate = "tracing.samplerate"
-	TracingService    = "tracing.service"
-	TracingVersion    = "tracing.version"
-)
+	TracingEnabled    bool    `env:"TRACING_ENABLED" envDefault:"false"`
+	TracingSampleRate float64 `env:"TRACING_SAMPLERATE" envDefault:"0.01"`
+	TracingService    string  `env:"TRACING_SERVICE" envDefault:"katalog-agent"`
+	TracingVersion    string  `env:"TRACING_VERSION"`
+}
 
-func NewConfig() (*koanf.Koanf, error) {
-	prefix, err := getPrefix()
+func NewConfig() (*Config, error) {
+	var cfg Config
+
+	err := env.Parse(&cfg)
 	if err != nil {
-		return nil, fmt.Errorf("could not get environment variable prefix: %w", err)
+		return nil, fmt.Errorf("failed to parse config: %w", err)
 	}
 
-	k := koanf.New(".")
-
-	err = k.Load(env.Provider(prefix, ".", func(s string) string {
-		return strings.Replace(strings.ToLower(
-			strings.TrimPrefix(s, prefix)), "_", ".", -1)
-	}), nil)
-	if err != nil {
-		return nil, fmt.Errorf("could not load environment variables: %w", err)
-	}
-
-	return k, nil
+	return &cfg, nil
 }

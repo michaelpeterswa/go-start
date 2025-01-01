@@ -20,7 +20,7 @@ jobs:
           node-version: lts/*
 
       - name: Install Semantic Release Plugins
-        run: npm install --save-dev conventional-changelog-conventionalcommits@v8 # yamllint disable-line rule:line-length
+        run: npm install conventional-changelog-conventionalcommits@6 # yamllint disable-line rule:line-length
 
       - name: Release Version
         env:
