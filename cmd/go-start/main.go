@@ -23,7 +23,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	slogLevel, err := logging.LogLevelToSlogLevel(c.String(config.LogLevel))
+	slogLevel, err := logging.LogLevelToSlogLevel(c.LogLevel)
 	if err != nil {
 		slog.Error("could not parse log level", slog.String("error", err.Error()))
 		os.Exit(1)
@@ -36,16 +36,16 @@ func main() {
 	ootelClient := ootel.NewOotelClient(
 		ootel.WithMetricConfig(
 			ootel.NewMetricConfig(
-				c.Bool(config.MetricsEnabled),
-				c.Int(config.MetricsPort),
+				c.MetricsEnabled,
+				c.MetricsPort,
 			),
 		),
 		ootel.WithTraceConfig(
 			ootel.NewTraceConfig(
-				c.Bool(config.TracingEnabled),
-				c.Float64(config.TracingSampleRate),
-				c.String(config.TracingService),
-				c.String(config.TracingVersion),
+				c.TracingEnabled,
+				c.TracingSampleRate,
+				c.TracingService,
+				c.TracingVersion,
 			),
 		),
 	)

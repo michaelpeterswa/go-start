@@ -6,8 +6,7 @@ toolchain go1.22.2
 
 require (
 	github.com/alpineworks/ootel v1.0.1
-	github.com/knadh/koanf/providers/env v0.1.0
-	github.com/knadh/koanf/v2 v2.1.1
+	github.com/caarlos0/env/v11 v11.3.1
 )
 
 require (
@@ -16,11 +15,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-viper/mapstructure/v2 v2.0.0-alpha.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1 // indirect
-	github.com/knadh/koanf/maps v0.1.1 // indirect
-	github.com/mitchellh/copystructure v1.2.0 // indirect
-	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/prometheus/client_golang v1.19.0 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.53.0 // indirect
