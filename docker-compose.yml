@@ -7,21 +7,18 @@ services:
     ports:
       - "8081:8081"
     environment:
-      # setting up koanf prefix to read environment variables
-      CONFIG_PREFIX: "GS_"
-
       # logging
-      GS_LOG_LEVEL: "info"
+      LOG_LEVEL: "info"
 
       # metrics
-      GS_METRICS_ENABLED: "true"
-      GS_METRICS_PORT: "8081"
+      METRICS_ENABLED: "true"
+      METRICS_PORT: "8081"
 
       # tracing
-      GS_TRACING_ENABLED: "false"
-      GS_TRACING_SAMPLERATE: "1.0"
-      GS_TRACING_SERVICE: "go-start"
-      GS_TRACING_VERSION: "0.0.1"
+      TRACING_ENABLED: "false"
+      TRACING_SAMPLERATE: "1.0"
+      TRACING_SERVICE: "go-start"
+      TRACING_VERSION: "0.0.1"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://tempo:4317"
 
       # grpc (otlp tracing)
