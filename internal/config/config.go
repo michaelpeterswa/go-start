@@ -12,6 +12,8 @@ type Config struct {
 	MetricsEnabled bool `env:"METRICS_ENABLED" envDefault:"true"`
 	MetricsPort    int  `env:"METRICS_PORT" envDefault:"8081"`
 
+	Local bool `env:"LOCAL" envDefault:"false"`
+
 	TracingEnabled    bool    `env:"TRACING_ENABLED" envDefault:"false"`
 	TracingSampleRate float64 `env:"TRACING_SAMPLERATE" envDefault:"0.01"`
 	TracingService    string  `env:"TRACING_SERVICE" envDefault:"katalog-agent"`

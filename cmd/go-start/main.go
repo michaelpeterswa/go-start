@@ -2,41 +2,50 @@ package main
 
 import (
 	"context"
+	"log"
 	"log/slog"
 	"os"
 	"time"
 
-	"github.com/alpineworks/ootel"
+	"alpineworks.io/ootel"
 	"github.com/michaelpeterswa/go-start/internal/config"
 	"github.com/michaelpeterswa/go-start/internal/logging"
+	"go.opentelemetry.io/contrib/instrumentation/host"
+	"go.opentelemetry.io/contrib/instrumentation/runtime"
 )
 
 func main() {
-	slogHandler := slog.NewJSONHandler(os.Stdout, nil)
-	slog.SetDefault(slog.New(slogHandler))
+	logLevel := os.Getenv("LOG_LEVEL")
+	if logLevel == "" {
+		logLevel = "error"
+	}
 
-	slog.Info("welcome to go-start!")
+	slogLevel, err := logging.LogLevelToSlogLevel(logLevel)
+	if err != nil {
+		log.Fatalf("could not convert log level: %s", err)
+	}
 
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slogLevel,
+	})))
 	c, err := config.NewConfig()
 	if err != nil {
 		slog.Error("could not create config", slog.String("error", err.Error()))
 		os.Exit(1)
 	}
 
-	slogLevel, err := logging.LogLevelToSlogLevel(c.LogLevel)
-	if err != nil {
-		slog.Error("could not parse log level", slog.String("error", err.Error()))
-		os.Exit(1)
-	}
-
-	slog.SetLogLoggerLevel(slogLevel)
-
 	ctx := context.Background()
+
+	exporterType := ootel.ExporterTypePrometheus
+	if c.Local {
+		exporterType = ootel.ExporterTypeOTLPGRPC
+	}
 
 	ootelClient := ootel.NewOotelClient(
 		ootel.WithMetricConfig(
 			ootel.NewMetricConfig(
 				c.MetricsEnabled,
+				exporterType,
 				c.MetricsPort,
 			),
 		),
@@ -52,7 +61,20 @@ func main() {
 
 	shutdown, err := ootelClient.Init(ctx)
 	if err != nil {
-		panic(err)
+		slog.Error("could not create ootel client", slog.String("error", err.Error()))
+		os.Exit(1)
+	}
+
+	err = runtime.Start(runtime.WithMinimumReadMemStatsInterval(5 * time.Second))
+	if err != nil {
+		slog.Error("could not create runtime metrics", slog.String("error", err.Error()))
+		os.Exit(1)
+	}
+
+	err = host.Start()
+	if err != nil {
+		slog.Error("could not create host metrics", slog.String("error", err.Error()))
+		os.Exit(1)
 	}
 
 	defer func() {
