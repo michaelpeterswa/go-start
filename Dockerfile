@@ -5,6 +5,7 @@ FROM golang:1 AS stage-compile
 WORKDIR /go/src/app
 COPY . .
 
+# hadolint ignore=DL3062
 RUN go get -d -v ./... && CGO_ENABLED=0 GOOS=linux go build ./cmd/go-start
 
 # -=-=-=-=- Final Distroless Image -=-=-=-=-
