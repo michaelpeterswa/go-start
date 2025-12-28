@@ -5,11 +5,11 @@ jobs:
   commitlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
       - run: npm install --save-dev @commitlint/{config-conventional,cli}
@@ -18,12 +18,12 @@ jobs:
   golangci-lint:
     strategy:
       matrix:
-        go-version: [1.22.x]
+        go-version: [1.25.x]
         os: [ubuntu-latest]
     name: lint
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Go
         uses: actions/setup-go@v5
@@ -31,15 +31,15 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v5.2.0
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: v1.62.2
+          version: v2.6
           args: --timeout=5m --enable=bodyclose
 
   yamllint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -49,28 +49,28 @@ jobs:
   hadolint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: hadolint/hadolint-action@v2.0.0
+      - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
 
   test:
     strategy:
       matrix:
-        go-version: [1.22.x]
+        go-version: [1.25.x]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
